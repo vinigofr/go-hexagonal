@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/asaskevich/govalidator"
+	uuid "github.com/satori/go.uuid"
 )
 
 // Uma interface carregará métodos
@@ -15,6 +16,26 @@ type ProductInterface interface {
 	GetName() string
 	GetStatus() string
 	GetPrice() float64
+}
+
+type ProductServiceInterface interface {
+	Get(id string) (ProductInterface, error)
+	Create(name string, price float64) (ProductInterface, error)
+	Enable(product Product) (ProductInterface, error)
+	Disable(product Product) (ProductInterface, error)
+}
+
+type ProductReader interface {
+	Get(id string) (ProductInterface, error)
+}
+
+type ProductWriter interface {
+	Save(product ProductInterface) (ProductInterface, error)
+}
+
+type ProductPersistenceInterface interface {
+	ProductReader
+	ProductWriter
 }
 
 const (
@@ -32,6 +53,13 @@ type Product struct {
 
 func init() {
 	govalidator.SetFieldsRequiredByDefault(false)
+}
+
+func NewProduct() *Product {
+	return &Product{
+		ID:     uuid.NewV4().String(),
+		Status: DISABLED,
+	}
 }
 
 func (p *Product) IsValid() (bool, error) {
