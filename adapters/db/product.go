@@ -11,6 +11,10 @@ type ProductDb struct {
 	db *sql.DB
 }
 
+func NewProductDb(db *sql.DB) *ProductDb {
+	return &ProductDb{db}
+}
+
 func (p *ProductDb) Get(id string) (application.ProductInterface, error) {
 	var product application.Product
 
@@ -32,4 +36,4 @@ func (p *ProductDb) Get(id string) (application.ProductInterface, error) {
 	return &product, nil
 }
 
-func (p *ProductDb) Save(id string) (application.ProductInterface, error)
+// func (p *ProductDb) Save(id string) (application.ProductInterface, error)
